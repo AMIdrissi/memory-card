@@ -1,0 +1,11 @@
+side-effects are handled using a hook called useEffect()
+    - this includes things like sending data to a server or recieving data from a server or some query 
+    - finding/changing the position of the component on the webpage
+    - ** This interaction with the outside world is called a "side-effect" **
+
+
+
+
+
+
+[ it is all what i have been waiting for this whole time (i really need to up the pace again cause this is not working) ]    
