@@ -3,22 +3,30 @@ import { useEffect, useState } from "react";
 function ClockTimer() {
     
     const [timer , setTimer] = useState(0);
+    const [colorT , setColorT] = useState("white");
 
     useEffect(() => {
         const key = setInterval(() => {
-            setTimer(count => count + 1)
+            setTimer(count => count + 1);
+            if (timer%2==0) {
+                setColorT("red")
+            }
+            else{
+                setColorT("whitesmoke")
+            }
           }, 1000);
   
         return () => {
             clearInterval(key); // this clears the setInterval thing , to do that you need const like bruh how did i not think of it 
         }
 
-      }, []);
-      
+      }, [timer]);
+      // here each time timer is change we execute useEffect();
+    
     
     return (
         <div>
-            <p>{timer} seconds passed</p>
+            <h1 style={{color:colorT}}>{timer} seconds passed</h1>
         </div>
     )
 }
