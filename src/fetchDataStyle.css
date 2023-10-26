@@ -1,0 +1,31 @@
+.card-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 0 0 15px #eee;
+    background-color: rgba(255, 255, 255, 0.731);
+    color: rgb(70, 70, 70);
+    margin: 23px 24px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+.card p{
+    font-size: 22px;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.card:hover{
+    transform: translateY(10px) rotate(2deg);
+}
+
+.card:active{
+    transform: rotateY(180deg)
+}
