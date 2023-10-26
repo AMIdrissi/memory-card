@@ -14,15 +14,24 @@ function GetInfo(){
         setImgSrc('');
         dataFetch('https://pokeapi.co/api/v2/pokemon-form/').then(data => {
             setObj(data.results);
-            (data.results).forEach(result => {
-                dataFetch(result.url).then(datax=> {console.log(datax.sprites.front_default);setImgSrc((d)=>d+","+datax.sprites.front_default);});
-            })
-            
         })
     },[])
 
+    // for (let i = 0; i < obj.length; i++) {
+    //     console.log(obj[i].name)
+    // }
+
     return <div>
-        <h1>{obj}</h1>
+        
+        {
+            (() => {
+                let listItems = [];
+                for (let i = 0; i < obj.length; i++) {
+                  listItems.push(<div><p>{obj[i].name}</p><p>{obj[i].url}</p></div>);
+                }
+                return listItems;
+            })()
+        }
     </div>
 }
 
