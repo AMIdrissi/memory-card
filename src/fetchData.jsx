@@ -11,15 +11,18 @@ function GetInfo(){
     }
 
     useEffect(() => {
+        setImgSrc('');
         dataFetch('https://pokeapi.co/api/v2/pokemon-form/').then(data => {
-            setObj(data.results[0]);
-            dataFetch(data.results[0].url).then(datax=> {console.log(datax.sprites.front_default);setImgSrc(datax.sprites.front_default);});
+            setObj(data.results);
+            (data.results).forEach(result => {
+                dataFetch(result.url).then(datax=> {console.log(datax.sprites.front_default);setImgSrc((d)=>d+","+datax.sprites.front_default);});
+            })
+            
         })
     },[])
 
     return <div>
-        <h2>name : {obj.name}</h2>
-        <img src={imgSrc} alt="" style={{height:"200px"}} />
+        <h1>{obj}</h1>
     </div>
 }
 
