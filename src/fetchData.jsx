@@ -1,47 +1,30 @@
 import { useEffect, useState } from "react";
-
+import ImageConatiner from "./ImageContainer";
 import "./fetchDataStyle.css"
-import CardContainer from "./cardContainer";
-import SelectAnswer from "./selectBox";
 
-function GetInfo({url , limit}){
-
-    const [obj , setObj] = useState({});
+function FetchAllData() {
     
-    const dataFetch = async(recource)=>{
-        const fetchOperation = await fetch(recource+""+limit);
-        const data = await fetchOperation.json();
+    const [dataX , setDataX] = useState({});
+    const fetchAction = async(resource) => {
+        const promise = await fetch(resource);
+        const data = await promise.json();
         return data;
     }
 
-    useEffect(() => {
-        dataFetch(url).then(data => {
-            setObj(data.results);
-        })
+    useEffect(()=>{
+        const data = fetchAction('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=60');
+        data.then(data => setDataX(data.results));
     },[])
-
-    // for (let i = 0; i < obj.length; i++) {
-    //     console.log(obj[i].name)
-    // }
-
-    return <div className="card-container">
-        
-        
+    
+    return <div className="cardsContainer">
         {
-            (() => {
-                let listItems = [];
-                let listNames = [];
-                for (let i = 0; i < obj.length; i++) {
-                    listNames.push(obj[i].name);
-                    listItems.push(<CardContainer key={i} obj={obj[i]}/>); 
-                }
-                
-                listItems.push(<SelectAnswer pokemonsNameList={listNames} size={limit}/>)
-                const randomSelec = Math.floor(Math.random()*(limit-1));
-                return [listItems , listItems[listItems.length-1]]; 
-            })()
+            Array.prototype.map.call(dataX, (element,index) => {
+                return <ImageConatiner key={index} object={element}/>
+            })
         }
     </div>
+
+
 }
 
-export default GetInfo;
+export default FetchAllData;
