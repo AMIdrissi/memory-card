@@ -13,7 +13,7 @@ function GetImages({url,visible}) {
         fetchStuff(url)
     },[])
 
-    return (<img src={imgSrc} alt="" style={{height:"200px" , opacity:visible}}/>)
+    return (<img src={imgSrc} alt="" style={{height:"200px" ,padding:"50px 10px", opacity:visible}}/>)
     
     
 }

@@ -2,19 +2,20 @@ import { useEffect, useState } from "react";
 
 import "./fetchDataStyle.css"
 import CardContainer from "./cardContainer";
+import SelectAnswer from "./selectBox";
 
-function GetInfo(){
+function GetInfo({url , limit}){
 
     const [obj , setObj] = useState({});
     
     const dataFetch = async(recource)=>{
-        const fetchOperation = await fetch(recource);
+        const fetchOperation = await fetch(recource+""+limit);
         const data = await fetchOperation.json();
         return data;
     }
 
     useEffect(() => {
-        dataFetch('https://pokeapi.co/api/v2/pokemon-form/').then(data => {
+        dataFetch(url).then(data => {
             setObj(data.results);
         })
     },[])
@@ -25,13 +26,19 @@ function GetInfo(){
 
     return <div className="card-container">
         
+        
         {
             (() => {
                 let listItems = [];
+                let listNames = [];
                 for (let i = 0; i < obj.length; i++) {
-                    listItems.push(<CardContainer key={i} obj={obj[i]}/>);
+                    listNames.push(obj[i].name);
+                    listItems.push(<CardContainer key={i} obj={obj[i]}/>); 
                 }
-                return listItems;
+                
+                listItems.push(<SelectAnswer pokemonsNameList={listNames} size={limit}/>)
+                const randomSelec = Math.floor(Math.random()*(limit-1));
+                return [listItems , listItems[listItems.length-1]]; 
             })()
         }
     </div>
