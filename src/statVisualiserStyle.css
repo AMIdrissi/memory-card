@@ -1,0 +1,10 @@
+.outerPB{
+    border-radius: 10px;
+    background-color:rgba(0, 0, 0, 0.277);
+    width:100%;
+}
+.innerPB{
+    border-radius: 10px;
+    background-color: rgb(38, 47, 92);
+    height: 10px;
+}

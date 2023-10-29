@@ -4,7 +4,11 @@ import "./fetchDataStyle.css"
 
 function FetchAllData() {
     
-    const [dataX , setDataX] = useState({});
+    const [dataX , setDataX] = useState([]);
+    const [pickN , setPickN] = useState(Math.floor(Math.random()*60));  
+    const random = Math.floor(Math.random()*60);
+
+    
     const fetchAction = async(resource) => {
         const promise = await fetch(resource);
         const data = await promise.json();
@@ -12,16 +16,19 @@ function FetchAllData() {
     }
 
     useEffect(()=>{
-        const data = fetchAction('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=60');
+        const data = fetchAction('https://pokeapi.co/api/v2/pokemon/?offset=' + random + '&limit=60');
         data.then(data => setDataX(data.results));
     },[])
+
     
+
     return <div className="cardsContainer">
+        
         {
-            Array.prototype.map.call(dataX, (element,index) => {
-                return <ImageConatiner key={index} object={element}/>
-            })
-        }
+            (dataX[pickN] ? ((<ImageConatiner key={pickN} object={dataX[pickN]}/>)) : <p>waiting....</p>)
+        }  
+        
+        <button type="button" onClick={() => {setPickN(Math.floor(Math.random()*60))}}>refresh</button>
     </div>
 
 
