@@ -7,9 +7,8 @@ function ImageConatiner({object }) {
     const [dataX , setDataX] = useState({});
     const [name , setName] = useState('');
     const [rotateFlag , setRotateFlag] = useState(false);
-    const [HP , setHP] = useState({});
-    const [attack , setAttack] = useState({});
-    const [defense , setDefense] = useState({});
+    const [stats , setStats] = useState([]);
+    
     const fetchAction = async(resource) => {
         const promise = await fetch(resource);
         const data = await promise.json();
@@ -20,9 +19,7 @@ function ImageConatiner({object }) {
         const data = fetchAction(object.url);
         data.then(data => { setDataX(data.sprites.other['official-artwork'].front_default);
                             setName(data.name); 
-                            setHP(data.stats["0"]);
-                            setAttack(data.stats["1"]);
-                            setDefense(data.stats["2"]); 
+                            setStats(data.stats);
                             });
     },[]);
 
@@ -36,14 +33,13 @@ function ImageConatiner({object }) {
             </div>
             <div className="backSide" style={{display:rotateFlag? "block" : "none",transform:"rotateY(180deg)"}}>
                 {
-                    HP.stat!==undefined ? <Stat statName={(HP.stat.name)} stat={HP.base_stat}/> : <p>charging...</p>
+                    stats.map((st , index) => {
+                        if (index!==3 && index!==4) {
+                            return st.stat!==undefined ? <Stat key={index} statName={(st.stat.name)} stat={st.base_stat}/> : <p>charging...</p>
+                        }
+                    })
                 }
-                {
-                    attack.stat!==undefined ? <Stat statName={(attack.stat.name)} stat={attack.base_stat}/> : <p>charging...</p>
-                }
-                {
-                    defense.stat!==undefined ? <Stat statName={(defense.stat.name)} stat={defense.base_stat}/> : <p>charging...</p>
-                }
+                
             </div>
     </div>
 }
