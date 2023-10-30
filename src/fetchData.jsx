@@ -6,9 +6,7 @@ function FetchAllData() {
     
     let map = new Map();
     const [dataX , setDataX] = useState([]);
-    const [pickN , setPickN] = useState(Math.floor(Math.random()*60));
-    const [correctFlag , setCorrectFlag] = useState('');
-    const [name , setName] = useState('');
+    const [flipall , setFlipall] = useState(false);
     const [answer , setAnswer] = useState('');
     const random = Math.floor(Math.random()*60);
     
@@ -23,9 +21,12 @@ function FetchAllData() {
         data.then(data => {setDataX(data.results);setAnswer(data.results);});
     },[])
 
-    return <div className="cardsContainer">
+    return <div >
         
-        {
+        <div>
+            <button onClick={() => {setFlipall(!flipall)}}>flipALL</button>
+        </div>
+        {/* {
             (dataX[pickN] ? ((<ImageConatiner key={pickN} object={dataX[pickN]}/>)) : <p>waiting....</p>)
         }  
         
@@ -36,6 +37,13 @@ function FetchAllData() {
                                                 ? setCorrectFlag("true"):setCorrectFlag("false")
                                                 }
                                             } style={{padding:"5px 20px"}}>go</button>
+        </div> */}
+        <div className="cardsContainer">
+            {
+                dataX.map((card , index) =>{
+                    return <ImageConatiner key={index} object={card} isFlipped={flipall}/>
+                })
+            }
         </div>
     </div>
 
