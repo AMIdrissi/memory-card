@@ -1,32 +1,63 @@
 import { useEffect, useState } from "react";
 import ImageConatiner from "./ImageContainer";
-import "./fetchDataStyle.css"
+import "./fetchDataStyle.css";
 
 function FetchAllData() {
-    
-    let map = new Map();
-    const [dataX , setDataX] = useState([]);
-    const [flipall , setFlipall] = useState(false);
-    const [answer , setAnswer] = useState('');
-    const random = Math.floor(Math.random()*60);
-    
-    const fetchAction = async(resource) => {
-        const promise = await fetch(resource);
-        const data = await promise.json();
-        return data;
-    }
+  let map = new Map();
+  const [dataX, setDataX] = useState([]);
+  const [flipall, setFlipall] = useState(false);
+  const [answerObj, setAnswerObj] = useState([]);
+  const random = Math.floor(Math.random() * 60);
 
-    useEffect(()=>{
-        const data = fetchAction('https://pokeapi.co/api/v2/pokemon/?offset=' + random + '&limit=60');
-        data.then(data => {setDataX(data.results);setAnswer(data.results);});
-    },[])
+  const fetchAction = async (resource) => {
+    const promise = await fetch(resource);
+    const data = await promise.json();
+    return data;
+  };
 
-    return <div >
-        
-        <div>
-            <button onClick={() => {setFlipall(!flipall)}}>flipALL</button>
-        </div>
-        {/* {
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchAction(
+        "https://pokeapi.co/api/v2/pokemon/?offset=" + random + "&limit=60"
+      );
+        // TODO: ALWAYS LEAVE SETTING TILL THE END
+        const All =  (data.results).map( async(result) => {
+            // setDataX(data.sprites.other["official-artwork"].front_default);
+            // setName(data.name);
+            // setStats(data.stats);
+            return fetchAction(result.url);
+          });
+        const pokees = await Promise.all(All);
+        const getPokees = pokees.map(poke => {
+            return {
+                name:poke.name,
+                img:poke.sprites.other["official-artwork"].front_default,
+                flipped:false,
+                stats:(poke.stats).map((st,index)=>{
+                    if (index !== 3 && index !== 4) {
+                        return {statName:st.stat.name ,stat:st.base_stat}
+                      }    
+                })
+            }
+        })
+        setAnswerObj(getPokees);
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <div>
+      <div>
+        <button
+          onClick={() => {
+            setFlipall(!flipall);
+          }}
+        >
+          flipALL
+        </button>
+      </div>
+      {/* {
             (dataX[pickN] ? ((<ImageConatiner key={pickN} object={dataX[pickN]}/>)) : <p>waiting....</p>)
         }  
         
@@ -38,16 +69,15 @@ function FetchAllData() {
                                                 }
                                             } style={{padding:"5px 20px"}}>go</button>
         </div> */}
-        <div className="cardsContainer">
-            {
-                dataX.map((card , index) =>{
-                    return <ImageConatiner key={index} object={card} isFlipped={flipall}/>
-                })
-            }
-        </div>
+      <div className="cardsContainer">
+        {answerObj.map((pokeObj, index) => {
+          return (
+            <ImageConatiner key={index} object={pokeObj} isFlipped={flipall} />
+          );
+        })}
+      </div>
     </div>
-
-
+  );
 }
 
 export default FetchAllData;

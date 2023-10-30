@@ -1,49 +1,55 @@
 import { useEffect, useState } from "react";
-import "./ImageContainerStyle.css"
+import "./ImageContainerStyle.css";
 import Stat from "./statVisualiser";
 
-function ImageConatiner({object , isFlipped , setFlipall}) {
-    
-    const [dataX , setDataX] = useState({});
-    const [name , setName] = useState('');
-    const [rotateFlag , setRotateFlag] = useState(false);
-    const [fixPos , setFixPos] = useState(true);
-    const [stats , setStats] = useState([]);
-    
-    const fetchAction = async(resource) => {
-        const promise = await fetch(resource);
-        const data = await promise.json();
-        return data;
-    }
+function ImageConatiner({ object, isFlipped, setFlipall }) {
+  const [usedFlag, setUsedFlag] = useState(false);
+//   const [isFlipped , setIsFlipped] = useState(isFlipped);
+  const [isFlippedEach, setIsFlippedEach] = useState(true);
 
-    useEffect(()=>{
-        const data = fetchAction(object.url);
-        data.then(data => { setDataX(data.sprites.other['official-artwork'].front_default);
-                            setName(data.name); 
-                            setStats(data.stats);
-                            });
-    },[]);
-
-    
-
-    return <div className="pokeContainer" onClick={() => {setRotateFlag(true);setFixPos(!fixPos);console.log(name)}} 
-            style={{transform:((rotateFlag ^ isFlipped)) ? "rotateY(180deg)" : "rotateY(0deg)" }}>
-            <div style={{display:((rotateFlag ^ isFlipped))? "none" : "block"}}>
-                <p>{ name }</p>
-                <img className="pokemon" src={dataX} alt="" />
-            </div>
-            <div className="backSide" style={{display:((rotateFlag ^ isFlipped))? "block" : "none",transform:"rotateY(180deg)"}}>
-                {console.log("sigle component : " + ((rotateFlag ^ isFlipped)))}
-                {
-                    stats.map((st , index) => {
-                        if (index!==3 && index!==4) {
-                            return st.stat!==undefined ? <Stat key={index} statName={(st.stat.name)} stat={st.base_stat}/> : <p>charging...</p>
-                        }
-                    })
-                }
-                
-            </div>
+  return (
+    <div
+      className="pokeContainer"
+      onClick={() => {
+        // setRotateFlag(true);
+        usedFlag ? console.log("") : console.log(object.name);
+        
+        setUsedFlag(true);
+      }}
+      style={{
+        transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+      }}
+    >
+      <div
+        style={{
+          display: isFlipped ? "none" : "block",
+        }}
+      >
+        <p>{object.name}</p>
+        <img className="pokemon" src={object.img} alt="" />
+      </div>
+      <div
+        className="backSide"
+        style={{
+          display: (
+            isFlipped
+              ? isFlipped
+              : isFlippedEach && setIsFlippedEach(!isFlippedEach)
+          )
+            ? "block"
+            : "none",
+          transform: "rotateY(180deg)",
+        }}
+      >
+        {(object.stats).map((st, index) => {
+          if (index !== 3 && index !== 4) {
+            console.log(st);
+            return <Stat key={index} statName={st.statName} stat={st.stat} />
+          }
+        })}
+      </div>
     </div>
+  );
 }
 
 export default ImageConatiner;
