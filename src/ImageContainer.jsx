@@ -4,25 +4,27 @@ import Stat from "./statVisualiser";
 
 function ImageConatiner({ object, isFlipped, setFlipall }) {
   const [usedFlag, setUsedFlag] = useState(false);
-//   const [isFlipped , setIsFlipped] = useState(isFlipped);
-  const [isFlippedEach, setIsFlippedEach] = useState(true);
-
+  const [isFlippedEach, setIsFlippedEach] = useState(false);
+  
   return (
     <div
       className="pokeContainer"
       onClick={() => {
-        // setRotateFlag(true);
+        object.flipped = !object.flipped;
+        setIsFlippedEach(!isFlippedEach);
         usedFlag ? console.log("") : console.log(object.name);
-        
         setUsedFlag(true);
       }}
       style={{
-        transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+        transform: object.flipped ? "rotateY(180deg)" : "rotateY(0deg)",
       }}
     >
+      {
+        console.log("before " , object.flipped)
+      }
       <div
         style={{
-          display: isFlipped ? "none" : "block",
+          display: object.flipped ? "none" : "block",
         }}
       >
         <p>{object.name}</p>
@@ -32,9 +34,7 @@ function ImageConatiner({ object, isFlipped, setFlipall }) {
         className="backSide"
         style={{
           display: (
-            isFlipped
-              ? isFlipped
-              : isFlippedEach && setIsFlippedEach(!isFlippedEach)
+            object.flipped
           )
             ? "block"
             : "none",
@@ -43,7 +43,6 @@ function ImageConatiner({ object, isFlipped, setFlipall }) {
       >
         {(object.stats).map((st, index) => {
           if (index !== 3 && index !== 4) {
-            console.log(st);
             return <Stat key={index} statName={st.statName} stat={st.stat} />
           }
         })}

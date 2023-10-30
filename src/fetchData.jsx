@@ -3,9 +3,8 @@ import ImageConatiner from "./ImageContainer";
 import "./fetchDataStyle.css";
 
 function FetchAllData() {
-  let map = new Map();
-  const [dataX, setDataX] = useState([]);
-  const [flipall, setFlipall] = useState(false);
+  const [flip, setFlip] = useState(false);
+  const [flipFlag , setFlipFlag] = useState(false);
   const [answerObj, setAnswerObj] = useState([]);
   const random = Math.floor(Math.random() * 60);
 
@@ -20,27 +19,27 @@ function FetchAllData() {
       const data = await fetchAction(
         "https://pokeapi.co/api/v2/pokemon/?offset=" + random + "&limit=60"
       );
-        // TODO: ALWAYS LEAVE SETTING TILL THE END
-        const All =  (data.results).map( async(result) => {
-            // setDataX(data.sprites.other["official-artwork"].front_default);
-            // setName(data.name);
-            // setStats(data.stats);
-            return fetchAction(result.url);
-          });
-        const pokees = await Promise.all(All);
-        const getPokees = pokees.map(poke => {
-            return {
-                name:poke.name,
-                img:poke.sprites.other["official-artwork"].front_default,
-                flipped:false,
-                stats:(poke.stats).map((st,index)=>{
-                    if (index !== 3 && index !== 4) {
-                        return {statName:st.stat.name ,stat:st.base_stat}
-                      }    
-                })
+      // TODO: ALWAYS LEAVE SETTING TILL THE END
+      const All = data.results.map(async (result) => {
+        // setDataX(data.sprites.other["official-artwork"].front_default);
+        // setName(data.name);
+        // setStats(data.stats);
+        return fetchAction(result.url);
+      });
+      const pokees = await Promise.all(All);
+      const getPokees = pokees.map((poke) => {
+        return {
+          name: poke.name,
+          img: poke.sprites.other["official-artwork"].front_default,
+          flipped: false,
+          stats: poke.stats.map((st, index) => {
+            if (index !== 3 && index !== 4) {
+              return { statName: st.stat.name, stat: st.base_stat };
             }
-        })
-        setAnswerObj(getPokees);
+          }),
+        };
+      });
+      setAnswerObj(getPokees);
     };
 
     fetchData();
@@ -50,9 +49,7 @@ function FetchAllData() {
     <div>
       <div>
         <button
-          onClick={() => {
-            setFlipall(!flipall);
-          }}
+          onClick={()=> setFlipFlag(!flipFlag)}
         >
           flipALL
         </button>
@@ -71,8 +68,9 @@ function FetchAllData() {
         </div> */}
       <div className="cardsContainer">
         {answerObj.map((pokeObj, index) => {
-          return (
-            <ImageConatiner key={index} object={pokeObj} isFlipped={flipall} />
+		  flipFlag ? pokeObj.flipped=true :pokeObj.flipped=false ;
+		  return (
+            <ImageConatiner key={index} object={pokeObj} isFlipped={flip} />
           );
         })}
       </div>
