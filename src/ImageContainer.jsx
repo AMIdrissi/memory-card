@@ -34,7 +34,7 @@ function ImageConatiner({ object, testCard }) {
           display: object.flipped ? "none" : "block",
         }}
       >
-        <p>{object.name} </p>
+        <h4>{object.name} </h4>
         <img className="pokemon" src={object.img} alt="" />
       </div>
       <div
@@ -45,7 +45,10 @@ function ImageConatiner({ object, testCard }) {
         }}
       >
         {testCard ? (
-          <p>there is nothing to see here</p>
+          <div style={{textAlign:"center"}}>
+            <h2 style={{margin:"20px 0px"}}>Ready?</h2>
+            <img style={{width:"160px",padding:"20px"}} src="https://seeklogo.com/images/P/pokeball-logo-DC23868CA1-seeklogo.com.png" alt="" />
+          </div>
         ) : (
           object.stats.map((st, index) => {
             if (index !== 3 && index !== 4) {

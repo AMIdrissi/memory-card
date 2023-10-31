@@ -50,12 +50,15 @@ function FetchAllData() {
   return (
     <div>
 	  {
-		<div style={{display: startFlag? "flex":"none" , justifyContent:"center"}}>
-			<ImageConatiner object={testSubject} testCard={true}/>
-		</div>
+      <div>
+        {!startFlag ? testSubject.flipped=true : testSubject.flipped=false}
+        <div style={{display:"flex" , justifyContent:"center"}}>
+        <ImageConatiner object={testSubject} testCard={true}/>
+        </div>
+    </div>
 	  }
-      <div style={{display: !startFlag? "flex":"none" , justifyContent:"center"}}>
-        <button onClick={() => setStartFlag(!startFlag)}>start</button>
+      <div style={{display:"flex", justifyContent:"center"}}>
+        <button onClick={() => setStartFlag(!startFlag)}>{startFlag?"exit": "start" }</button>
       </div>
       <div className="cardsContainer">
         {answerObj.map((pokeObj, index) => {
