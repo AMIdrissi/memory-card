@@ -3,9 +3,9 @@ import ImageConatiner from "./ImageContainer";
 import "./fetchDataStyle.css";
 
 function FetchAllData() {
-  const [flip, setFlip] = useState(false);
-  const [flipFlag , setFlipFlag] = useState(false);
+  const [startFlag, setStartFlag] = useState(false);
   const [answerObj, setAnswerObj] = useState([]);
+  const [testSubject , setTestSubject] = useState({});
   const random = Math.floor(Math.random() * 60);
 
   const fetchAction = async (resource) => {
@@ -40,6 +40,8 @@ function FetchAllData() {
         };
       });
       setAnswerObj(getPokees);
+	  const chosen = Object.assign({}, getPokees[3]);
+	  setTestSubject(chosen);
     };
 
     fetchData();
@@ -47,30 +49,19 @@ function FetchAllData() {
 
   return (
     <div>
-      <div>
-        <button
-          onClick={()=> setFlipFlag(!flipFlag)}
-        >
-          flipALL
-        </button>
+	  {
+		<div style={{display: startFlag? "flex":"none" , justifyContent:"center"}}>
+			<ImageConatiner object={testSubject} testCard={true}/>
+		</div>
+	  }
+      <div style={{display: !startFlag? "flex":"none" , justifyContent:"center"}}>
+        <button onClick={() => setStartFlag(!startFlag)}>start</button>
       </div>
-      {/* {
-            (dataX[pickN] ? ((<ImageConatiner key={pickN} object={dataX[pickN]}/>)) : <p>waiting....</p>)
-        }  
-        
-        <div className="bare">
-            <input type="text" style={{backgroundColor:correctFlag!=="" ? (correctFlag==="true")?"#26bf33":"#aa1206" : "gray" , margin:"6px" , borderRadius:"10px"}} onChange={(e) => {setName(e.target.value)}}/>
-            <button type="button" onClick={()=>{
-                                                name.toLocaleLowerCase()===(dataX[pickN].name).toLocaleLowerCase() 
-                                                ? setCorrectFlag("true"):setCorrectFlag("false")
-                                                }
-                                            } style={{padding:"5px 20px"}}>go</button>
-        </div> */}
       <div className="cardsContainer">
         {answerObj.map((pokeObj, index) => {
-		  flipFlag ? pokeObj.flipped=true :pokeObj.flipped=false ;
-		  return (
-            <ImageConatiner key={index} object={pokeObj} isFlipped={flip} />
+          startFlag ? (pokeObj.flipped = true) : (pokeObj.flipped = false);
+          return (
+            <ImageConatiner key={index} object={pokeObj} testCard={false}/>
           );
         })}
       </div>
