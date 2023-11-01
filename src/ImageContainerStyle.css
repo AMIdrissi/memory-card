@@ -35,3 +35,11 @@
 .backSide::before{
     transform:none;
 }
+
+.readyCard img{
+    transition: all 2s ease;
+}
+
+.readyCard img:hover{
+    transform: rotate(1800deg);
+}

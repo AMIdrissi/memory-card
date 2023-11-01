@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import ImageConatiner from "./ImageContainer";
 import "./fetchDataStyle.css";
+import Loader from "./loader";
 
 function FetchAllData() {
   const [startFlag, setStartFlag] = useState(false);
   const [answerObj, setAnswerObj] = useState([]);
-  const [testSubject , setTestSubject] = useState({});
-  const random = Math.floor(Math.random() * 60);
+  const [questionCard , setQuestionCard] = useState({});
+  const [chosenName , setChosenName] = useState('');
+  const [nextF , setNextF] = useState(false);
+  let limit = 12; 
+  const random = Math.floor(Math.random() * limit);
 
   const fetchAction = async (resource) => {
     const promise = await fetch(resource);
@@ -17,7 +21,7 @@ function FetchAllData() {
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchAction(
-        "https://pokeapi.co/api/v2/pokemon/?offset=" + random + "&limit=60"
+        "https://pokeapi.co/api/v2/pokemon/?offset=" + random + "&limit=" + limit +""
       );
       // TODO: ALWAYS LEAVE SETTING TILL THE END
       const All = data.results.map(async (result) => {
@@ -39,36 +43,46 @@ function FetchAllData() {
           }),
         };
       });
-      setAnswerObj(getPokees);
-	  const chosen = Object.assign({}, getPokees[3]);
-	  setTestSubject(chosen);
+    setAnswerObj(getPokees);
+	  // const chosen = Object.assign({}, getPokees[random]);
+	  // setQuestionCard(chosen);
     };
 
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (questionCard) {
+      setChosenName(questionCard["name"])
+    }
+  },[questionCard])
+
   return (
-    <div>
+    answerObj.length===0 ? <Loader/> : <div>
 	  {
       <div>
-        {!startFlag ? testSubject.flipped=true : testSubject.flipped=false}
+        {!startFlag ? questionCard.flipped=true : questionCard.flipped=false}
         <div style={{display:"flex" , justifyContent:"center"}}>
-        <ImageConatiner object={testSubject} testCard={true}/>
+          {/* {questionCard ? console.log(questionCard.name):console.log("NO")}; */}
+          <ImageConatiner object={questionCard} testCard={true}/>
         </div>
     </div>
 	  }
       <div style={{display:"flex", justifyContent:"center"}}>
-        <button onClick={() => setStartFlag(!startFlag)}>{startFlag?"exit": "start" }</button>
+        <button onClick={() => {setNextF(false);setQuestionCard(Object.assign({}, answerObj[Math.floor(Math.random() * limit)]));setStartFlag(!startFlag);setChosenName(questionCard["name"])}}>{startFlag?"exit": "start" }</button>
+        <button onClick={() => {setNextF(true);setQuestionCard(Object.assign({}, answerObj[Math.floor(Math.random() * limit)]));}}>next</button>
+        
       </div>
       <div className="cardsContainer">
         {answerObj.map((pokeObj, index) => {
-          startFlag ? (pokeObj.flipped = true) : (pokeObj.flipped = false);
+          nextF ? console.log("") : ((startFlag) ? (pokeObj.flipped = true) : (pokeObj.flipped = false));
           return (
-            <ImageConatiner key={index} object={pokeObj} testCard={false}/>
+            <ImageConatiner key={index} object={pokeObj} testCard={false} chosenName={chosenName} started={startFlag}/>
           );
         })}
       </div>
     </div>
+    
   );
 }
 
