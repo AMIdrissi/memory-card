@@ -2,9 +2,24 @@ import { useEffect, useState } from "react";
 import "./ImageContainerStyle.css";
 import Stat from "./statVisualiser";
 
-function ImageConatiner({ object, testCard , chosenName , started}) {
+function ImageConatiner({
+  index,
+  object,
+  testCard,
+  chosenName,
+  started,
+  setTester,
+  setCountScore,
+  setPickList,
+  pickList,
+}) {
   const [usedFlag, setUsedFlag] = useState(false);
   const [isFlippedEach, setIsFlippedEach] = useState(false);
+  const [correctAns, setCorrectAns] = useState(false);
+
+  useEffect(() => {
+    setCorrectAns(false);
+  }, [started]);
 
   return (
     <div
@@ -14,22 +29,32 @@ function ImageConatiner({ object, testCard , chosenName , started}) {
         if (testCard) {
           // usedFlag ? console.log("") : console.log(object.name);
           setUsedFlag(true);
-        } else if(started && !testCard) {
+        } else if (started && !testCard) {
           object.flipped = false;
-          console.log(object.flipped);
-          object["name"]===chosenName ? console.log("correct") : console.log("NOT correct")
-          setIsFlippedEach(!isFlippedEach); // ! SUPER IMPORTANT : this works like a trigger for the rerendering process
-          usedFlag ? console.log("") : console.log(chosenName);
+          if (object["name"] === chosenName) {
+            setTester(true);
+            setCorrectAns(true);
+            setCountScore((oldscore) => oldscore + 1);
+          } else {
+            setTester(false);
+            setCorrectAns(false);
+          }
+          pickList.splice(index, 1);
+          console.log(pickList);
+          setIsFlippedEach(!isFlippedEach);
+          usedFlag ? console.log("") : console.log("chosenName");
           setUsedFlag(true);
-        }
-        else if(!started && !testCard) {
+        } else if (!started && !testCard) {
           object.flipped = !object.flipped;
           setIsFlippedEach(!isFlippedEach);
         }
-       
       }}
       style={{
         transform: object.flipped ? "rotateY(180deg)" : "rotateY(0deg)",
+        boxShadow:
+          correctAns && started
+            ? "0px 0px 0px 18px rgba(49, 162, 47, 0.801)"
+            : "0px 0px 0px 18px rgba(255,255,255)",
       }}
     >
       <div
@@ -48,9 +73,13 @@ function ImageConatiner({ object, testCard , chosenName , started}) {
         }}
       >
         {testCard ? (
-          <div className="readyCard" style={{textAlign:"center"}}>
-            <h2 style={{margin:"20px 0px"}}>Ready?</h2>
-            <img style={{width:"160px",padding:"20px"}} src="https://seeklogo.com/images/P/pokeball-logo-DC23868CA1-seeklogo.com.png" alt="" />
+          <div className="readyCard" style={{ textAlign: "center" }}>
+            <h2 style={{ margin: "20px 0px" }}>Ready?</h2>
+            <img
+              style={{ width: "160px", padding: "20px" }}
+              src="https://seeklogo.com/images/P/pokeball-logo-DC23868CA1-seeklogo.com.png"
+              alt=""
+            />
           </div>
         ) : (
           object.stats.map((st, index) => {
@@ -60,7 +89,6 @@ function ImageConatiner({ object, testCard , chosenName , started}) {
           })
         )}
       </div>
-      
     </div>
   );
 }
