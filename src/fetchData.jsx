@@ -7,7 +7,7 @@ import ScoreBare from "./scoreBare";
 function FetchAllData() {
   const [startFlag, setStartFlag] = useState(false);
   const [answerObj, setAnswerObj] = useState([]);
-  const [pickList, setPickList] = useState([]);
+  let pickList = new Map();
   const [questionCard, setQuestionCard] = useState({});
   const [chosenName, setChosenName] = useState("");
   const [isCorrect, setIscorrect] = useState(false);
@@ -52,7 +52,9 @@ function FetchAllData() {
         };
       });
       setAnswerObj(getPokees);
-      setPickList(structuredClone(getPokees));
+      getPokees.forEach((poke,index)=>{
+        pickList.set(index,poke.name);
+      })
       // const chosen = Object.assign({}, getPokees[random]);
       // setQuestionCard(chosen);
     };
@@ -75,7 +77,7 @@ function FetchAllData() {
             pickList[Math.floor(Math.random() * (pickList.length - 1))]
           )
         );
-        console.log(pickList);
+        // console.log(pickList);
       }
     }, 1000);
     setIscorrect(false);
@@ -140,7 +142,6 @@ function FetchAllData() {
                   setTester={setIscorrect}
                   setCountScore={setScore}
                   pickList={pickList}
-                  setChooseList={setPickList}
                 />
               );
             })}

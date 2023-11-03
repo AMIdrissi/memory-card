@@ -39,7 +39,7 @@ function ImageConatiner({
             setTester(false);
             setCorrectAns(false);
           }
-          pickList.splice(index, 1);
+          
           console.log(pickList);
           setIsFlippedEach(!isFlippedEach);
           usedFlag ? console.log("") : console.log("chosenName");
