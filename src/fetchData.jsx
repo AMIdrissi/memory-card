@@ -7,7 +7,7 @@ import ScoreBare from "./scoreBare";
 function FetchAllData() {
   const [startFlag, setStartFlag] = useState(false);
   const [answerObj, setAnswerObj] = useState([]);
-  let pickList = new Map();
+  const [pickList, setPickList] = useState([]);
   const [questionCard, setQuestionCard] = useState({});
   const [chosenName, setChosenName] = useState("");
   const [isCorrect, setIscorrect] = useState(false);
