@@ -67,14 +67,11 @@ function FetchAllData() {
   }, [questionCard]);
 
   useEffect(() => {
+    let rand = Math.floor(Math.random() * (pickList.length - 1));
+    
     setTimeout(() => {
-      if (pickList) {
-        setQuestionCard(
-          Object.assign(
-            {},
-            pickList[Math.floor(Math.random() * (pickList.length - 1))]
-          )
-        );
+      if (pickList.length!==0) {
+        setQuestionCard(Object.assign({}, pickList[rand]));
         console.log(pickList);
       }
     }, 1000);
@@ -115,6 +112,8 @@ function FetchAllData() {
                   )
                 );
                 setStartFlag(!startFlag);
+                setPickList(structuredClone(answerObj));
+                setScore(0);
                 setChosenName(questionCard["name"]);
               }}
             >
@@ -140,7 +139,7 @@ function FetchAllData() {
                   setTester={setIscorrect}
                   setCountScore={setScore}
                   pickList={pickList}
-                  setChooseList={setPickList}
+                  setPickList={setPickList}
                 />
               );
             })}

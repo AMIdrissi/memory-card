@@ -10,8 +10,8 @@ function ImageConatiner({
   started,
   setTester,
   setCountScore,
-  setPickList,
   pickList,
+  setPickList,
 }) {
   const [usedFlag, setUsedFlag] = useState(false);
   const [isFlippedEach, setIsFlippedEach] = useState(false);
@@ -31,15 +31,21 @@ function ImageConatiner({
           setUsedFlag(true);
         } else if (started && !testCard) {
           object.flipped = false;
-          if (object["name"] === chosenName) {
-            setTester(true);
-            setCorrectAns(true);
-            setCountScore((oldscore) => oldscore + 1);
-          } else {
-            setTester(false);
-            setCorrectAns(false);
+          if (pickList.length >= 1) {
+            if (object["name"] === chosenName) {
+              setTester(true);
+              setCorrectAns(true);
+              setCountScore((oldscore) => oldscore + 1);
+            } else {
+              setTester(false);
+              setCorrectAns(false);
+            }
           }
-          pickList.splice(index, 1);
+          setPickList(
+            pickList.filter((obj) => {
+              return obj.name !== object.name;
+            })
+          );
           console.log(pickList);
           setIsFlippedEach(!isFlippedEach);
           usedFlag ? console.log("") : console.log("chosenName");
